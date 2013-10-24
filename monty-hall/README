@@ -1,0 +1,97 @@
+Tasks:
+
+  * The game as implemented is missing a number of vital components:
+
+      * The functions initial_pick, complete and door_displays in the Logic
+        module are unimplemented.  In order to implement them you'll need to
+        understand the state and door types in the Types module and the
+        function documentation in logic.mli.  The sections in pattern matching
+        in Real World OCaml may also be useful.  You might like to begin by
+        writing some test cases for each function.
+
+      * The process_event function in the Controller module is largely
+        incomplete.
+
+      * The picture_url function in the Monty module is unimplemented.  It
+        should map each picture description (i.e. each tag of the
+        Types.display type) to a suitable URL.
+
+      * The render_model function in the Monty module is unimplemented.  It
+        should render the current state of all the doors on the screen.
+
+  * In-browser games can be susceptible to security problems; since the state
+    is maintained in-process as JavaScript values, a knowledgeable user can
+    sometimes inspect or modify the state and interfere with the intended flow
+    of the game.  One way to make peeking at the game state more difficult is
+    to split up the game into client and server components, and keep sensitive
+    state on the server.
+
+    Split the Monty Hall game up in the way described above, so that the
+    controller code runs on the server.  Much of the work is already done in
+    the Client and Server modules, but the following components are missing:
+
+      * Command-line argument passing for the server process to allow the user
+        to specify the host and port
+
+      * The strip_leading_char function in server.ml is unimplemented.
+
+      * The browser interface needs to be updated to route requests through
+        the client controller.
+
+    Implement the missing pieces and check that you can run the game using the
+    new client/server implementation.
+
+  * There's a rapidly-growing collection of OCaml libraries available, but
+    it's still sometimes useful to use "legacy code" or system libraries
+    written in C.
+
+    Chapter 19 of Real World OCaml describes 'ctypes', an approach to binding
+    to C functions without writing any C.
+
+      https://realworldocaml.org/beta3/en/html/foreign-function-interface.html
+
+    Use ctypes to bind to a system random number generator (such as drand48)
+    and use the resulting function to write a replacement for Random.rand_int
+    in the Logic module.
+
+  * If you manage to finish all the above with time to spare, you might like
+    to consider how to extend the game.  Here are two possibilities, but feel
+    free to choose a different direction!
+
+      * The counterintuitive claims made about the optimal strategy for the
+        Monty Hall game have often provoked controversy.  You could extend the
+        game to record how often switching or sticking with the original
+        choice have proved successful, and so collect emperical evidence for
+        favouring a particular strategy.
+
+      * The server assumes a single active game, and so is currently unable to
+        handle multiple simultaneous connections.  You could make the server
+        more realistic by extending it with a concept of sessions or game
+        identifiers.
+
+Modules:
+
+  Messages (messages.ml)
+     Messages to display during the game.
+
+  Types (types.ml):
+     Definitions of types used throughout the application.
+
+  Logic (logic.ml, logic.mli)
+     Functions encoding the game logic.
+
+  Controller (controller.ml, controller.mli)
+     Handle game events (i.e. clicks on doors)
+
+  Monty (monty.ml)
+     The browser interface to the game.
+
+Extra modules:
+
+  Client (client.ml, client.mli)
+    A controller implemented as a client for the command-line server.
+
+  Server (server.ml)
+    A command-line server communicates with the browser using JSON
+    over HTTP, receiving game events and returning a description of
+    the updated display.
